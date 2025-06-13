@@ -15,7 +15,7 @@ apt-get install -y libdrm-dev libsystemd-dev libncurses5-dev libncursesw5-dev
 cd /tmp/
 git clone https://github.com/Syllo/nvtop.git
 mkdir -p nvtop/build && cd nvtop/build
-CXX=/usr/bin/clang++ cmake .. -DNVIDIA_SUPPORT=ON -DAMDGPU_SUPPORT=ON -DINTEL_SUPPORT=ON
+CXX=/usr/bin/clang++ cmake .. -GNinja -DNVIDIA_SUPPORT=ON -DAMDGPU_SUPPORT=ON -DINTEL_SUPPORT=ON
 cmake --build . --target install --config Release
 
 # Setup nvidia
