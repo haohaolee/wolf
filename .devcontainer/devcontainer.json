@@ -7,14 +7,23 @@
   },
   "postStartCommand": "bash $(pwd)/.devcontainer/dev-setup.sh",
   "features": {
-    "ghcr.io/nils-geistmann/devcontainers-features/zsh:0": {
-      "plugins": [
-        "git",
-        "zsh-autosuggestions",
-        "history",
-        "docker"
-      ]
+    "ghcr.io/devcontainers/features/common-utils": {
+      "installZsh": true,
+      "installOhMyZsh": true,
+      "installOhMyZshConfig": true,
+      "configureZshAsDefaultShell": true
     },
+    "ghcr.io/devcontainers-extra/features/fzf:1": {},
+    "ghcr.io/devcontainers-extra/features/zsh-plugins:0": {
+      "plugins": "zsh-autosuggestions zsh-syntax-highlighting fzf z history docker git",
+      "omzPlugins": "https://github.com/zsh-users/zsh-autosuggestions.git https://github.com/zsh-users/zsh-syntax-highlighting.git"
+    },
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "dockerSocketPath": "/var/run/docker.sock"
+    },
+    "ghcr.io/meaningful-ooo/devcontainer-features/homebrew:2": {
+      "shallowClone": true
+    }
     // Doesn't work on ubuntu oracular
     //    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
     //      "moby": false,
@@ -32,8 +41,7 @@
     "-v",
     "/var/run/docker.sock:/var/run/docker.sock:ro",
     "-v",
-    "/dev/:/dev/:rw",
-    "--rm",
+    "/dev/:/dev/:rw"
   ],
   "hostRequirements": {
     "gpu": true
