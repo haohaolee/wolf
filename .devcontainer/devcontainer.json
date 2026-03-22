@@ -18,9 +18,6 @@
       "plugins": "zsh-autosuggestions zsh-syntax-highlighting fzf z history docker git",
       "omzPlugins": "https://github.com/zsh-users/zsh-autosuggestions.git https://github.com/zsh-users/zsh-syntax-highlighting.git"
     },
-    "ghcr.io/devcontainers/features/docker-in-docker:2": {
-      "dockerSocketPath": "/var/run/docker.sock"
-    },
     "ghcr.io/meaningful-ooo/devcontainer-features/homebrew:2": {
       "shallowClone": true
     }
