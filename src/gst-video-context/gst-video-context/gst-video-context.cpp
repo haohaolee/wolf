@@ -17,6 +17,21 @@ using cuda_context_ptr = std::shared_ptr<GstCudaContext>;
 struct GstVideoContext {
   cuda_context_ptr cuda_context;
   GstContext *context;
+
+  GstVideoContext(cuda_context_ptr cuda_ctx, GstContext *gst_ctx)
+      : cuda_context(std::move(cuda_ctx)), context(gst_ctx) {}
+  GstVideoContext(const GstVideoContext &) = delete;
+  GstVideoContext &operator=(const GstVideoContext &) = delete;
+  GstVideoContext(GstVideoContext &&other) noexcept
+      : cuda_context(std::move(other.cuda_context)), context(other.context) {
+    other.context = nullptr;
+  }
+
+  ~GstVideoContext() {
+    if (context) {
+      gst_context_unref(context);
+    }
+  }
 };
 
 bool init() {
@@ -177,10 +192,7 @@ gst_context_ptr need_context_for_device(const std::string &device_path, GstMessa
         auto context = gst_context_new_cuda_context(cuda_context.get());
         gst_element_set_context(GST_ELEMENT(GST_MESSAGE_SRC(msg)), context);
         logs::log(logs::debug, "Created CUDA context for device: {}", device_path);
-        return std::make_shared<GstVideoContext>(GstVideoContext{
-            .cuda_context = std::move(cuda_context),
-            .context = context,
-        });
+        return std::make_shared<GstVideoContext>(std::move(cuda_context), context);
       }
     }
   }

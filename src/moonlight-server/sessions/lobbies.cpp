@@ -280,6 +280,11 @@ setup_lobbies_handlers(const immer::box<state::AppState> &app_state,
                  }) | //
                  ranges::to<immer::vector<events::Lobby>>();
         });
+
+        // Clear stale CUDA/video context when no sessions or lobbies remain
+        if (app_state->running_sessions->load()->empty() && app_state->lobbies->load().empty()) {
+          app_state->gst_context->store(nullptr);
+        }
       }));
 
   // On a PlugDeviceEvent, we have to add the device to the lobby queue so that the runner will pick it up

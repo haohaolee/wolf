@@ -60,6 +60,12 @@ setup_moonlight_handlers(const immer::box<state::AppState> &app_state,
           return state::remove_session(ses_v, {.session_id = ev->session_id});
         });
 
+        // Clear stale CUDA/video context when no sessions or lobbies remain,
+        // so the next session gets a fresh context (avoids cross-codec contamination).
+        if (app_state->running_sessions->load()->empty() && app_state->lobbies->load().empty()) {
+          app_state->gst_context->store(nullptr);
+        }
+
         plugged_devices_queue->update([=](const auto map) { return map.erase(std::to_string(ev->session_id)); });
       }));
 
